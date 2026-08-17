@@ -1,0 +1,18 @@
+# Secrets — never commit. Use .env.example as the template.
+.env
+
+# Runtime state, recreated automatically on first request.
+# Session files contain live CSRF tokens; logs can contain submitted data.
+storage/logs/
+storage/sessions/
+storage/ratelimits/
+
+# Only needed to rebuild Tailwind (npx tailwindcss). The compiled
+# public/assets/css/app.css IS committed, so the site runs without Node.
+node_modules/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,14 @@
+ErrorDocument 404 /404.php
+
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteRule ^(config|includes|storage|src)/ - [F,L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
