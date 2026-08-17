@@ -1,16 +1,25 @@
 # BROX Tech — Simple version (no database)
 
-Three pages — Home, Services, Contact — with no database, no admin login, no
-user accounts. The contact form emails you directly instead of storing leads
-anywhere.
+Four pages — Home, Services, Careers, Contact — with no database, no admin
+login, no user accounts. The contact form and job applications email you
+directly instead of storing anything.
 
 This is a trimmed-down version of the full BROX Tech PHP site. If you later
-want the admin dashboard, lead storage, jobs page, or BROX Launchpad, use the
-full version instead — this one intentionally leaves those out.
+want the admin dashboard, lead storage, or BROX Launchpad, use the full
+version instead — this one intentionally leaves those out.
 
 ## Requirements
 
-- PHP 8.1+ (that's it — no MySQL, no Composer, no Node.js needed to run it)
+- PHP 8.1+ — no MySQL, no Composer, no Node.js needed to run it
+- The **mbstring** extension (used for length validation and email headers)
+- The **openssl** extension, only if you want emails to actually send
+  (the mailer connects over `ssl://`)
+
+Most shared hosts enable both by default. If mbstring is missing, form
+submissions fail with an empty 500 response and the browser shows a generic
+error — check `storage/logs/php-error.log` to confirm. On a stock Windows
+PHP build neither is enabled until you create a `php.ini` and uncomment
+`extension=mbstring` and `extension=openssl`.
 
 ## Setup (local, on your own computer)
 
@@ -43,7 +52,12 @@ Apache, and visit `http://localhost/brox-simple/public/`.
   is stored or listed anywhere. If your inbox fills up and you need a proper
   leads list, that's the signal to move to the full version.
 - **No admin login / leads dashboard** — nothing to log into.
-- **No Jobs or BROX Launchpad pages** — just Home, Services, Contact.
+- **No BROX Launchpad pages** — no founder submissions or investor listings.
+- **Job applications are emailed, not stored.** The Careers page sends each
+  application (with the CV attached) to `ADMIN_EMAIL`. There's no applicant
+  list to review later, so if an email fails to send, that application is
+  gone — failures are logged to `storage/logs/php-error.log`. CVs are capped
+  at 4 MB and limited to PDF/DOC/DOCX.
 - **Simpler contact form** — name, email, company, service checkboxes, and a
   message box. The full version's budget/timeline/product-type fields were
   dropped to keep this version genuinely simple.
@@ -57,13 +71,33 @@ Apache, and visit `http://localhost/brox-simple/public/`.
   security posture as the full version, just without the parts that need a
   database to exist.
 
+## Editing the styles
+
+`public/assets/css/app.css` is a compiled Tailwind bundle and is committed, so
+the site runs with no build step. If you change any class in a `.php` file,
+rebuild it:
+
+```
+npm install
+npx tailwindcss -i src/input.css -o public/assets/css/app.css --minify
+```
+
+Skipping the rebuild means new classes simply have no styles.
+
 ## Testing performed
 
-Verified locally with PHP's built-in server: all three pages return 200 with
-no database configured at all, contact form submission succeeds end-to-end,
-CSRF-token mismatch correctly returns 403, missing/invalid fields correctly
-return 400 with specific messages, an XSS payload in the message field was
-confirmed to be escaped before being placed in the notification email body,
-and the file-based rate limiter was confirmed to return 429 once the
-per-IP threshold is hit (and confirmed to persist correctly across separate
-server restarts, since it's file-backed rather than in-memory).
+Verified locally with PHP's built-in server (PHP 8.4, mbstring + openssl on):
+all four pages return 200 with no database configured, and both the contact
+form and the job application form succeed end-to-end.
+
+Rejection paths confirmed on the application endpoint: CSRF mismatch returns
+403; an unknown role id, an invalid email, and a too-short message each return
+400 with a specific message; a `.exe` attachment, malformed base64, and a 5 MB
+file are each rejected; and the honeypot field returns a fake success without
+sending. The per-IP rate limiter was confirmed to allow 5 applications and
+return 429 on the 6th.
+
+A CV filename containing `"` and CRLF was confirmed to be sanitised before
+reaching the MIME headers in `mailer.php`, which interpolates the filename
+without escaping it. Note that sanitising replaces non-ASCII characters with
+underscores, so an Arabic or accented filename arrives readable but altered.

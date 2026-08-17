@@ -8,6 +8,7 @@ define('SITE_LOCATION', env('SITE_LOCATION', 'Jeddah, Saudi Arabia'));
 const NAV_ITEMS = [
     ['label' => 'Home', 'href' => '/'],
     ['label' => 'Services', 'href' => '/services.php'],
+    ['label' => 'Careers', 'href' => '/jobs.php'],
     ['label' => 'Contact', 'href' => '/contact.php'],
 ];
 
@@ -28,6 +29,10 @@ const PAGE_META = [
     '/services.php' => [
         'title' => 'Services — BROX Tech',
         'description' => 'Product Growth, Google Ads, SEO, ASO, AI Search, Meta Ads & Product Branding services from BROX Tech.',
+    ],
+    '/jobs.php' => [
+        'title' => "We're Hiring — BROX Tech (Jeddah / Remote)",
+        'description' => 'Join the BROX Tech team. Open roles: AI Engineer & AI Expert. Full-time, based in Jeddah, Saudi Arabia or remote. Apply now.',
     ],
     '/contact.php' => [
         'title' => 'Contact — BROX Tech',
