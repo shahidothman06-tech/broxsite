@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 220 15% 15%;
+  --border: 220 10% 90%;
+  --card: 0 0% 98%;
+  --card-foreground: 220 15% 15%;
+  --primary: 217 91% 48%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 220 12% 90%;
+  --secondary-foreground: 220 15% 20%;
+  --muted: 220 10% 92%;
+  --muted-foreground: 220 12% 35%;
+  --accent: 220 15% 94%;
+  --accent-foreground: 220 15% 20%;
+  --destructive: 0 84% 48%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 220 15% 75%;
+  --ring: 217 91% 48%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 220 20% 8%;
+  --foreground: 0 0% 96%;
+  --border: 220 12% 20%;
+  --card: 220 18% 11%;
+  --card-foreground: 0 0% 96%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 220 20% 8%;
+  --secondary: 220 14% 18%;
+  --secondary-foreground: 0 0% 96%;
+  --muted: 220 14% 16%;
+  --muted-foreground: 220 10% 65%;
+  --accent: 220 14% 18%;
+  --accent-foreground: 0 0% 96%;
+  --destructive: 0 72% 55%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 220 14% 24%;
+  --ring: 217 91% 60%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+@layer utilities {
+  .marquee-track {
+    animation: marquee 28s linear infinite;
+    width: max-content;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+}
